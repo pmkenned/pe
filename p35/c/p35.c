@@ -41,7 +41,13 @@ static int
 is_prime(int n)
 {
     int i, hi = (int) sqrt(n);
-    for (i = 2; i <= hi; i++)
+    if (n <= 1)
+        return 0;
+    if (n == 2)
+        return 1;
+    if (n % 2 == 0)
+        return 0;
+    for (i = 3; i <= hi; i += 2)
         if (n % i == 0)
             return 0;
     return 1;

@@ -43,9 +43,19 @@ is_prime(uint64_t n, int backfill) {
         max_n = n;
     }
 
+    /* memory is slow! just do the divisions! */
+#if 0
     for (i = 0; i < num_primes; i++)
         if (n % primes[i] == 0)
             return 0;
+#else
+    if (n <= 1) return 0;
+    if (n == 2) return 1;
+    if (n % 2 == 0) return 0;
+    for (i = 3; i <= sqrt(n); i += 2)
+        if (n % i == 0)
+            return 0;
+#endif
 
     if (backfill) {
         primes[num_primes++] = n;
@@ -53,10 +63,6 @@ is_prime(uint64_t n, int backfill) {
             primes_cap *= 2;
             primes = realloc(primes, sizeof(*primes)*primes_cap);
         }
-    } else {
-        for (i = 2; i < sqrt(n); i++)
-            if (n % i == 0)
-                return 0;
     }
 
     return 1;

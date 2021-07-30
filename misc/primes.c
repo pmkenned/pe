@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <math.h>
 
 #define MAX_DEPTH 10000
 
@@ -86,9 +87,19 @@ is_prime(uint64_t n, int backfill) {
         max_n = n;
     }
 
+    /* memory is slow! just do the divisions! */
+#if 0
     for (i = 0; i < num_primes; i++)
         if (n % primes[i] == 0)
             return 0;
+#else
+    if (n <= 1) return 0;
+    if (n == 2) return 1;
+    if (n % 2 == 0) return 0;
+    for (i = 3; i <= sqrt(n); i += 2)
+        if (n % i == 0)
+            return 0;
+#endif
 
     if (backfill) {
         primes[num_primes++] = n;
@@ -96,10 +107,6 @@ is_prime(uint64_t n, int backfill) {
             primes_cap *= 2;
             primes = realloc(primes, sizeof(*primes)*primes_cap);
         }
-    } else {
-        for (i = 2; i < sqrt(n); i++)
-            if (n % i == 0)
-                return 0;
     }
 
     return 1;
@@ -117,17 +124,26 @@ print_primes()
 int main() {
 
     int i;
-    for (i = 0; i < 100000000; i++) {
-        int r = rand() % 500000;
-        is_prime(r, 1);
-        //printf("%d: %d\n", r, is_prime(r, 0));
-        if (i % 1000000 == 0) {
+    for (i = 0; i < 10000000; i++) {
+        is_prime(i, 1);
+        if (i % 100000 == 0) {
             printf(".");
             fflush(stdout);
         }
     }
     printf("\n");
+    printf("%zu\n", num_primes);
     //print_primes();
+
+    for (i = 0; i < 10000000; i++) {
+        int r = rand() % 10000000;
+        is_prime(r, 0);
+        if (i % 100000 == 0) {
+            printf(".");
+            fflush(stdout);
+        }
+    }
+    printf("\n");
 
     return 0;
 }
