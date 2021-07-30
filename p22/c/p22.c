@@ -51,12 +51,10 @@ make_list()
     list = malloc(sizeof(*list)*list_cap);
     char * tok;
     char * ptr = buffer;
-    int i = 0;
     while ((tok = strtok(ptr, ",\n")) != NULL) {
         size_t l = strlen(tok);
         tok[l-1] = '\0';
         tok++;
-        i++;
         ptr = NULL;
         list[list_num] = tok;
         list_num++;
