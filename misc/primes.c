@@ -1,18 +1,61 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <math.h>
+
+#define MAX_DEPTH 10000
+
+#if 0
+typedef struct {
+    uint64_t x;
+    int valid;
+} set_item_t;
+
+typedef struct {
+    set_item_t arr[100];
+    size_t cap;
+} set_t;
+
+static set_t *
+set_create()
+{
+    size_t i;
+    set_t * s = malloc(sizeof(set_t));
+    for (i = 0; i < s->cap; i++) {
+        s->arr[i].valid = 0;
+    }
+    return s;
+}
+
+static size_t
+set_hash(uint64_t x)
+{
+    size_t hash = 5381;
+    int c;
+    while ((c = *s++))
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+    return hash;
+}
+
+static size_t
+set_get_idx()
+{
+}
+
+static void
+set_add(set_t * s, int x)
+{
+    size_t idx = set_hash(x);
+    if (s->arr[idx].valid) {
+        if (s->arr[idx]
+    }
+}
 
 static int
-from_digits(int * digits, int n)
+set_check(set_t * s)
 {
-    int i, rv = 0;
-    for (i = 0; i < n; i++) {
-        rv *= 10;
-        rv += digits[i];
-    }
-    return rv;
+    return 0;
 }
+#endif
 
 static uint64_t * primes = NULL;
 static size_t primes_cap = 10;
@@ -62,55 +105,29 @@ is_prime(uint64_t n, int backfill) {
     return 1;
 }
 
-static int
-permute(int n, int m, int * a, int which)
+static void
+print_primes()
 {
-    static int * _a = NULL;
-    static int count = 0;
-    //printf(".");
-    if (a != NULL) {
-        _a = a;
-        count = 0;
+    size_t i;
+    for (i = 0; i < num_primes; i++) {
+        printf("%ld\n", primes[i]);
     }
-    int i, j;
-    if (n == 0) {
-        count++;
-    } else {
-        for (i = 1; i <= n+m; i++) {
-            /* look for an available number for slot m */
-            for (j = 0; j < m; j++)
-                if (_a[j] == i)
-                    break;
-            if (j != m) /* i is not available */
-                continue;
-            _a[m] = i;
-            permute(n-1, m+1, NULL, which);
-            if (count > which)
-                return 0;
-        }
-    }
-    return 1;
 }
 
-#define N 7
-
 int main() {
-    int j, k;
-    int a[N];
-    int max = 0;
 
-    for (k = 4; k <= N; k++) {
-        j = 0;
-        while (1) {
-            if (permute(k, 0, a, j))
-                break;
-            j++;
-            int x = from_digits(a, k);
-            if (is_prime(x, 0))
-                max = x > max ? x : max;
+    int i;
+    for (i = 0; i < 100000000; i++) {
+        int r = rand() % 500000;
+        is_prime(r, 1);
+        //printf("%d: %d\n", r, is_prime(r, 0));
+        if (i % 1000000 == 0) {
+            printf(".");
+            fflush(stdout);
         }
     }
-    printf("%d\n", max);
+    printf("\n");
+    //print_primes();
 
     return 0;
 }

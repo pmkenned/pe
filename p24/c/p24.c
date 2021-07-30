@@ -12,7 +12,7 @@ f(int n, int m, int * a)
     if (n == 0) {
         if (++count >= WHICH) {
             for (i = 0; i < n+m; i++) {
-                printf("%d ", a[i]);
+                printf("%d", a[i]);
             }
             printf("\n");
             exit(0);
@@ -23,6 +23,7 @@ f(int n, int m, int * a)
             for (j = 0; j < m; j++) {
                 if (a[j] == i) {
                     valid = 0;
+                    break;
                 }
             }
             if (!valid)
