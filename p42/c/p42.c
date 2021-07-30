@@ -1,3 +1,4 @@
+#include "../../common/common.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,35 +6,12 @@
 
 char buffer[1024*20];
 
-static void
-read_file()
-{
-    FILE * fp = fopen("../words.txt", "r");
-    if (fp == NULL) {
-        perror("error");
-        exit(1);
-    }
-
-    size_t n = fread(buffer, 1, sizeof(buffer), fp);
-    if (n < sizeof(buffer)) {
-        if (ferror(fp)) {
-            perror("error");
-            exit(1);
-        }
-    }
-    if (!feof(fp)) {
-        fprintf(stderr, "buffer size insufficient\n");
-        exit(1);
-    }
-    fclose(fp);
-}
-
 size_t num_tokens = 0;
 size_t tokens_cap = 10;
 char ** tokens = NULL;
 
 static void
-get_tokens()
+get_tokens(char * buffer)
 {
     tokens = malloc(sizeof(*tokens)*tokens_cap);
     char * tok;
@@ -63,8 +41,9 @@ tri_value(const char * s)
 int main()
 {
     size_t i;
-    read_file();
-    get_tokens();
+    //read_file();
+    read_file("../words.txt", buffer, sizeof(buffer));
+    get_tokens(buffer);
 
     int count = 0;
     for (i = 0; i < num_tokens; i++) {

@@ -13,7 +13,9 @@ run: $(TARGET)
 	./$(TARGET)
 
 clean:
+	make clean -C ../../common/
 	rm -f $(TARGET)
 
-$(TARGET): $(SRC)
+$(TARGET): $(SRC) ../../common/common.o
+	make -C ../../common/
 	$(CC) $(CFLAGS) -o $(TARGET) $^ $(LDLIBS)

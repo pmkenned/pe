@@ -5,7 +5,7 @@
 #define WHICH 1000000
 
 static void
-f(int n, int m, int * a)
+permute(int n, int m, int * a)
 {
     static int count = 0;
     int i, j;
@@ -29,7 +29,7 @@ f(int n, int m, int * a)
             if (!valid)
                 continue;
             a[m] = i;
-            f(n-1, m+1, a);
+            permute(n-1, m+1, a);
         }
     }
 }
@@ -43,6 +43,6 @@ f(int n, int m, int * a)
 int main()
 {
     int a[N];
-    f(N, 0, a);
+    permute(N, 0, a);
     return 0;
 }
