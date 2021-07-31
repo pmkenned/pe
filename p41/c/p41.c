@@ -11,10 +11,10 @@ int main() {
     for (k = 4; k <= N; k++) {
         j = 0;
         while (1) {
-            if (permute(k, 0, a, j))
+            if (permute(a, k, j, 1))
                 break;
             j++;
-            int x = from_digits(a, k);
+            int x = from_digits(a, k, MSD_AT_0);
             if (is_prime(x))
                 max = x > max ? x : max;
         }

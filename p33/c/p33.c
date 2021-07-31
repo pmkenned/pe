@@ -59,7 +59,7 @@ int main()
 {
     int di[2], dj[2];
     float f[2];
-    int i, j, k = 0;
+    int i, j;
     for (i = 10; i <= 98; i++) {
         get_digits(i, di);
         for (j = i+i; j <= 99; j++) {

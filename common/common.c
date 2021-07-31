@@ -1,3 +1,4 @@
+#include "common.h"
 #include <stdint.h>
 #include <math.h>
 #include <stdlib.h>
@@ -26,15 +27,14 @@ read_file(const char * filename, char * buffer, size_t n)
     fclose(fp);
 }
 
-enum { LO_TO_HI, HI_TO_LO };
-
-static int
-_from_digits(int * digits, int n, int dir)
+uint64_t
+from_digits(int * digits, int n, int dir)
 {
-    int i, rv = 0;
-    int iv = (dir == LO_TO_HI) ? 0 : n-1;
-    int fv = (dir == LO_TO_HI) ? n : -1;
-    int step = (dir == LO_TO_HI) ? 1 : -1;
+    uint64_t rv = 0;
+    int i;
+    int iv = (dir == MSD_AT_0) ? 0 : n-1;
+    int fv = (dir == MSD_AT_0) ? n : -1;
+    int step = (dir == MSD_AT_0) ? 1 : -1;
     for (i = iv; i != fv; i += step) {
         rv *= 10;
         rv += digits[i];
@@ -42,27 +42,22 @@ _from_digits(int * digits, int n, int dir)
     return rv;
 }
 
+/* return number of significant digits */
 int
-from_digits(int * digits, int n)
-{
-    return _from_digits(digits, n, LO_TO_HI);
-}
-
-int
-from_digits_rev(int * digits, int n)
-{
-    return _from_digits(digits, n, HI_TO_LO);
-}
-
-int
-get_digits_base(int x, int * digits, int n, int b)
+get_digits_base(int * digits, int n, int x, int b, int dir)
 {
     int i;
-    for (i = 0; i < n; i++) {
+    int iv = (dir == LSD_AT_0) ? 0 : n-1;
+    int fv = (dir == LSD_AT_0) ? n : -1;
+    int step = (dir == LSD_AT_0) ? 1 : -1;
+    for (i = iv; i != fv; i += step) {
         digits[i] = x % b;
         x /= b;
     }
-    for (i = n-1; i >= 0; i--)
+    iv = (dir == MSD_AT_0) ? 0 : n-1;
+    fv = (dir == MSD_AT_0) ? n : -1;
+    step = (dir == MSD_AT_0) ? 1 : -1;
+    for (i = iv; i != fv; i += step)
         if (digits[i] != 0)
             return i+1;
     return 0;
@@ -134,12 +129,11 @@ is_prime_backfill(uint64_t n)
     return _is_prime(n, 1);
 }
 
-int
-permute(int n, int m, int * a, int which)
+static int
+_permute(int * a, int n, int m, int p, int lo)
 {
     static int * _a = NULL;
     static int count = 0;
-    //printf(".");
     if (a != NULL) {
         _a = a;
         count = 0;
@@ -148,7 +142,7 @@ permute(int n, int m, int * a, int which)
     if (n == 0) {
         count++;
     } else {
-        for (i = 1; i <= n+m; i++) {
+        for (i = lo; i < lo+n+m; i++) {
             /* look for an available number for slot m */
             for (j = 0; j < m; j++)
                 if (_a[j] == i)
@@ -156,12 +150,21 @@ permute(int n, int m, int * a, int which)
             if (j != m) /* i is not available */
                 continue;
             _a[m] = i;
-            permute(n-1, m+1, NULL, which);
-            if (count > which)
+            _permute(NULL, n-1, m+1, p, lo);
+            if (count > p)
                 return 0;
         }
     }
     return 1;
+}
+
+
+/* let n be the number of elements in the array
+   return 1 if the are fewer permutations than requested */
+int
+permute(int * a, int n, int p, int lo)
+{
+    return _permute(a, n, 0, p, lo);
 }
 
 int

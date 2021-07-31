@@ -27,7 +27,7 @@ is_palindrome(int * a, int n)
 
 int main()
 {
-    int i, j, answer = 0;
+    int i, answer = 0;
     int digits[6], bits[20];
     for (i = 1; i < 1000000; i++) {
         int nd = get_digits_base(i, digits, 6, 10);
