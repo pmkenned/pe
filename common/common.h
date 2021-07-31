@@ -7,7 +7,6 @@
 enum { MSD_AT_0, LSD_AT_0 };
 
 extern uint64_t * primes;
-extern size_t primes_cap;
 extern size_t num_primes;
 extern uint64_t max_n;
 
