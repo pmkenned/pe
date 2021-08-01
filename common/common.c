@@ -3,6 +3,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 
 void
 read_file(const char * filename, char * buffer, size_t n)
@@ -92,19 +93,16 @@ _is_prime(uint64_t n, int backfill) {
         max_n = n;
     }
 
-    /* memory is slow! just do the divisions! */
-#if 0
-    for (i = 0; i < num_primes; i++)
+    uint64_t sr = sqrt(n);
+    for (i = 0; i < num_primes; i++) {
+        if (primes[i] > sr)
+            break;
         if (n % primes[i] == 0)
             return 0;
-#else
-    if (n <= 1) return 0;
-    if (n == 2) return 1;
-    if (n % 2 == 0) return 0;
-    for (i = 3; i <= sqrt(n); i += 2)
+    }
+    for (i = primes[num_primes-1]+2; i <= sr; i += 2)
         if (n % i == 0)
             return 0;
-#endif
 
     if (backfill) {
         primes[num_primes++] = n;
@@ -127,6 +125,36 @@ int
 is_prime_backfill(uint64_t n)
 {
     return _is_prime(n, 1);
+}
+
+uint64_t
+nth_prime(size_t n)
+{
+    while (num_primes < n) {
+        is_prime_backfill(max_n+1);
+    }
+    return primes[n-1];
+}
+
+size_t
+get_prime_factors(int x, int * a, size_t n)
+{
+    size_t npf = 0;
+    int i = 1;
+    int half_x = x/2;
+    while (1) {
+        int np = nth_prime(i);
+        if (np > half_x)
+            break;
+        if (x % np == 0) {
+            assert(npf < n);
+            a[npf++] = np;
+            x /= np;
+        } else {
+            i++;
+        }
+    }
+    return npf;
 }
 
 static int
@@ -206,4 +234,20 @@ reverse(int * a, int n)
         a[i] = a[n-1-i];
         a[n-1-i] = t;
     }
+}
+
+int
+uniq(int * a, size_t n)
+{
+    size_t i;
+    int prev = a[0];
+    for (i = 1; i < n; ) {
+        if (a[i] == prev) {
+            memmove(a+i-1, a+i, sizeof(*a)*(n-i));
+            n--;
+        }
+        else
+            prev = a[i++];
+    }
+    return n;
 }

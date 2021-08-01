@@ -3,8 +3,6 @@
 #include <stdint.h>
 #include <string.h>
 
-#define NELEM(X) (sizeof(X)/sizeof(X[0]))
-
 static int
 in_list(int * a, int n, int x)
 {
