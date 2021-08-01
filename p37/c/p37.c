@@ -7,7 +7,7 @@ int main()
     int digits[20];
     for (i = 11; 1; i++) {
         if (is_prime(i)) {
-            int nd = get_digits_base(digits, 20, i, 10, LSD_AT_0);
+            int nd = get_digits(digits, 20, i, 10, LSD_AT_0);
             int flag = 1;
             for (j = nd-1; j > 0; j--) {
                 int x = from_digits(digits, j, LSD_AT_0);

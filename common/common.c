@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
 
 void
 read_file(const char * filename, char * buffer, size_t n)
@@ -45,7 +46,7 @@ from_digits(int * digits, int n, int dir)
 
 /* return number of significant digits */
 int
-get_digits_base(int * digits, int n, int x, int b, int dir)
+get_digits(int * digits, int n, int x, int b, int dir)
 {
     int i;
     int iv = (dir == LSD_AT_0) ? 0 : n-1;
@@ -250,4 +251,15 @@ uniq(int * a, size_t n)
             prev = a[i++];
     }
     return n;
+}
+
+int
+is_palindrome(int * a, int n)
+{
+    int i;
+    for (i = 0; i < n/2; i++) {
+        if (a[i] != a[n-i-1])
+            return 0;
+    }
+    return 1;
 }
