@@ -6,7 +6,6 @@ int main()
 {
     uint64_t i, j, k = 0;
     is_prime_backfill(1000000);
-    printf("%zu\n", num_primes);
     for (i = 9; i < 1000000; i += 2) {
         if (is_prime(i))
             continue;
