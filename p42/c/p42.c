@@ -41,7 +41,6 @@ tri_value(const char * s)
 int main()
 {
     size_t i;
-    //read_file();
     read_file("../words.txt", buffer, sizeof(buffer));
     get_tokens(buffer);
 

@@ -1,3 +1,4 @@
+#include "../../common/common.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -23,24 +24,6 @@ alpha_value(const char * s)
     while ((c = *s++) != '\0')
         sum += c - 'A' + 1;
     return sum;
-}
-
-static void
-read_file()
-{
-    FILE * fp = fopen("../names.txt", "r");
-    if (fp == NULL) {
-        perror("error");
-        exit(1);
-    }
-    size_t n = fread(buffer, 1, buffer_size, fp);
-    if (n < buffer_size) {
-        if (ferror(fp)) {
-            perror("");
-            exit(1);
-        }
-    }
-    fclose(fp);
 }
 
 static void
@@ -90,7 +73,7 @@ calc_answer()
 */
 int main()
 {
-    read_file();
+    read_file("../names.txt", buffer, sizeof(buffer));
 
     make_list();
 
