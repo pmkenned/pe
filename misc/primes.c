@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <math.h>
+#include <string.h>
 
 #define MAX_DEPTH 10000
 
@@ -109,6 +110,28 @@ is_prime(uint64_t n, int backfill) {
     return 1;
 }
 
+#if 1
+size_t sieve_cap = 0;
+char * sieve_arr = NULL;
+
+static int
+sieve(uint64_t x)
+{
+    if (x >= sieve_cap) {
+        sieve_cap = x+1;
+        sieve_arr = realloc(sieve_arr, sizeof(*sieve_arr)*sieve_cap);
+        memset(sieve_arr, 1, sizeof(*sieve_arr)*sieve_cap);
+
+        size_t p, i;
+        for (p = 2; p*p <= x; p++)
+            if (sieve_arr[p])
+                for (i = p*p; i <= x; i += p)
+                    sieve_arr[i] = 0;
+    }
+    return sieve_arr[x];
+}
+#endif
+
 static void
 print_primes()
 {
@@ -120,7 +143,16 @@ print_primes()
 
 int main() {
 
-    int i;
+    size_t i;
+#if 1
+    sieve(100000000);
+    for (i = sieve_cap-300; i < sieve_cap; i++)
+        if (sieve_arr[i])
+            printf("%ld ", i);
+    printf("\n");
+    return 0;
+#endif
+
     for (i = 0; i < 10000000; i++) {
         is_prime(i, 1);
         if (i % 100000 == 0) {
